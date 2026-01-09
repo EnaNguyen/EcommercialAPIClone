@@ -169,3 +169,14 @@ C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\bin\Debug\net10.0\
 C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\bin\Debug\net10.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\bin\Debug\net10.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\bin\Debug\net10.0\runtimes\win\lib\net9.0\System.Windows.Extensions.dll
+C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\bin\Debug\net10.0\EcommercialAPI.staticwebassets.runtime.json
+C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\obj\Debug\net10.0\EcommercialAPI.sourcelink.json
+C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\obj\Debug\net10.0\compressed\j7t55mnskg-{0}-5ipweew5fc-5ipweew5fc.gz
+C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\bin\Debug\net10.0\BouncyCastle.Cryptography.dll
+C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\bin\Debug\net10.0\MailKit.dll
+C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\bin\Debug\net10.0\MimeKit.dll
+C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\obj\Debug\net10.0\compressed\b5md24lvwn-{0}-8kv5j9dfob-8kv5j9dfob.gz
+C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\obj\Debug\net10.0\compressed\m1mkladt9b-{0}-9v9wt6scaq-9v9wt6scaq.gz
+C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\obj\Debug\net10.0\compressed\tdmoi99ov0-{0}-z4peha80t0-z4peha80t0.gz
+C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\obj\Debug\net10.0\compressed\bocyvzzp2i-{0}-zl891adt76-zl891adt76.gz
+C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

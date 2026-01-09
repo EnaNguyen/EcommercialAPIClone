@@ -13,31 +13,31 @@ namespace EcommercialAPI.Controllers
         {   
             _services = services;
         }
-        [HttpGet("/User/ProductList")]
+        [HttpGet("User/ProductList")]
         public async Task<IActionResult> ListSanPhamUser()
         {
             var data = await _services.UserViewProduct();
             return Ok(data);
         }
-        [HttpPost("/User/AddNewProduct")]
+        [HttpPost("User/AddNewProduct")]
         public async Task<IActionResult> AddNewProduct(ProductCreateModel model)
         {
             var data = await _services.AdminAddNewProduct(model);
             return Ok(data);
         }
-        [HttpPut("/User/EditProduct")]
+        [HttpPut("User/EditProduct")]
         public async Task<IActionResult> EditProduct(string id, ProductEditModel model)
         {
             var data = await _services.AdminUpdateProduct(id, model);
             return Ok(data);
         }
-        [HttpPut("/User/StatusProductChange")]
+        [HttpPut("User/StatusProductChange")]
         public async Task<IActionResult> UpdateProductStatus(string id)
         {
             var data = await _services.UpdateStatusProduct(id);
             return Ok(data);
         }
-        [HttpDelete("/User/ProductRemove")]
+        [HttpDelete("User/ProductRemove")]
         public async Task<IActionResult> RemoveProduct(string id)
         {
             var data= await _services.DeleteProduct(id);

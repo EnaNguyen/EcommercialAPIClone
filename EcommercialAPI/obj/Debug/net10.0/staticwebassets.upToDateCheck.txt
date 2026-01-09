@@ -1,0 +1,10 @@
+wwwroot\localdata.json
+wwwroot\template\Email\Validation\validation.css
+wwwroot\template\Email\Validation\validation.html
+wwwroot\template\Email\Notification\ResetPassword.html
+wwwroot\template\Email\Notification\ResetPassword.css
+C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\wwwroot\template\Email\Validation\validation.html
+C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\wwwroot\template\Email\Validation\validation.css
+C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\wwwroot\localdata.json
+C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\wwwroot\template\Email\Notification\ResetPassword.html
+C:\Users\EnaNguyen\source\repos\EcommercialAPI\EcommercialAPI\wwwroot\template\Email\Notification\ResetPassword.css

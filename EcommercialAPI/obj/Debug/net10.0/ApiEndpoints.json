@@ -1,8 +1,50 @@
 [
   {
+    "ContainingType": "EcommercialAPI.Controllers.AuthenticationController",
+    "Method": "Login",
+    "RelativePath": "api/Authentication/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "username",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "password",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EcommercialAPI.Controllers.AuthenticationController",
+    "Method": "TwoFA",
+    "RelativePath": "api/Authentication/verify-otp",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "username",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "otp",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "EcommercialAPI.Controllers.ProductController",
     "Method": "AddNewProduct",
-    "RelativePath": "User/AddNewProduct",
+    "RelativePath": "api/Product/User/AddNewProduct",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -18,7 +60,7 @@
   {
     "ContainingType": "EcommercialAPI.Controllers.ProductController",
     "Method": "EditProduct",
-    "RelativePath": "User/EditProduct",
+    "RelativePath": "api/Product/User/EditProduct",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -39,7 +81,7 @@
   {
     "ContainingType": "EcommercialAPI.Controllers.ProductController",
     "Method": "ListSanPhamUser",
-    "RelativePath": "User/ProductList",
+    "RelativePath": "api/Product/User/ProductList",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -49,7 +91,7 @@
   {
     "ContainingType": "EcommercialAPI.Controllers.ProductController",
     "Method": "RemoveProduct",
-    "RelativePath": "User/ProductRemove",
+    "RelativePath": "api/Product/User/ProductRemove",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -65,13 +107,108 @@
   {
     "ContainingType": "EcommercialAPI.Controllers.ProductController",
     "Method": "UpdateProductStatus",
-    "RelativePath": "User/StatusProductChange",
+    "RelativePath": "api/Product/User/StatusProductChange",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "id",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EcommercialAPI.Controllers.UserController",
+    "Method": "CreateNewUser",
+    "RelativePath": "api/User/CreateUser",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "EcommercialAPI.Models.CreateModels.UserCreateModal",
+        "IsRequired": true
+      },
+      {
+        "Name": "role",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EcommercialAPI.Controllers.UserController",
+    "Method": "GetListUser",
+    "RelativePath": "api/User/ListUser",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EcommercialAPI.Controllers.UserController",
+    "Method": "ResetPasswordUserOTP",
+    "RelativePath": "api/User/ResetPasswordOTP",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "username",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "otp",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EcommercialAPI.Controllers.UserController",
+    "Method": "ResetPasswordUser",
+    "RelativePath": "api/User/ResetPasswordRequest",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "username",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EcommercialAPI.Controllers.UserController",
+    "Method": "UpdateUserInfo",
+    "RelativePath": "api/User/UpdateUserInfo",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "EcommercialAPI.Models.EditModels.UserInfoChangeModel",
+        "IsRequired": true
+      },
+      {
+        "Name": "username",
         "Type": "System.String",
         "IsRequired": false
       }
