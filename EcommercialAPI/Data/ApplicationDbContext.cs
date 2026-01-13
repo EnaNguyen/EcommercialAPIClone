@@ -20,6 +20,11 @@ namespace EcommercialAPI.Data
         public virtual DbSet<Products> Products { get; set; } = null!;
         public virtual DbSet<Users> Users { get; set; } = null!;
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
+        public virtual DbSet<Carts> Carts { get; set; } = null!;
+        public virtual DbSet<CartDetails> CartDetails { get; set; } = null!;
+        public virtual DbSet<Orders> Orders { get; set; } = null!;
+        public virtual DbSet<OrderDetails> OrderDetails { get; set; } = null!;
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
@@ -29,18 +34,53 @@ namespace EcommercialAPI.Data
         {
             modelBuilder.Entity<Products>(entity =>
             {
-                modelBuilder.Entity<Products>()
-                .HasKey(p => p.Id);
+                entity.HasKey(p => p.Id);
+                entity.Property(p => p.Id).ValueGeneratedOnAdd();
             });
             modelBuilder.Entity<Users>(entity =>
             {
-                modelBuilder.Entity<Users>().HasKey(p => p.Id);
+                entity.HasKey(p => p.Id);
             });
             modelBuilder.Entity<RefreshToken>(entity =>
             {
-                modelBuilder.Entity<RefreshToken>().HasKey(p => p.Id);
+                entity.HasKey(p => p.Id);
             });
-
+            modelBuilder.Entity<Carts>(entity =>
+            {
+                entity.HasKey(p => p.Id);
+                entity.Property(p=>p.Id).ValueGeneratedOnAdd();
+                entity.HasOne(p => p.User)
+                      .WithOne(c => c.Cart)
+                      .HasForeignKey<Carts>(c => c.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+            modelBuilder.Entity<CartDetails>(entity =>
+            {
+                entity.HasKey(p => p.Id);
+                entity.Property(p=> p.Id).ValueGeneratedOnAdd();
+                entity.HasOne(cd => cd.Cart)
+                      .WithMany(c => c.CartDetails)
+                      .HasForeignKey(cd => cd.CartId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+            modelBuilder.Entity<Orders>(entity =>
+            {
+                entity.HasKey(p => p.Id);
+                entity.Property(p => p.Id).ValueGeneratedOnAdd();
+                entity.HasOne(p => p.User)
+                      .WithMany(c => c.Orders)
+                      .HasForeignKey(c => c.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+            modelBuilder.Entity<OrderDetails>(entity =>
+            {
+                entity.HasKey(p => p.Id);
+                entity.Property(p => p.Id).ValueGeneratedOnAdd();
+                entity.HasOne(cd => cd.Order)
+                      .WithMany(c => c.OrderDetails)
+                      .HasForeignKey(cd => cd.OrderId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
 
 
 
@@ -57,7 +97,7 @@ namespace EcommercialAPI.Data
             modelBuilder.Entity<Products>().HasData(
                 new Products
                 {
-                    Id = "1",
+                    Id = 1,
                     Name = "S24 Ultra",
                     Brand = "Samsung",
                     Description ="Nothing in my mind to descript this phone",

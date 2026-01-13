@@ -1,10 +1,12 @@
 using EcommercialAPI.Data;
+using EcommercialAPI.Helper;
 using EcommercialAPI.Respository;
 using EcommercialAPI.Services;
 using EcommercialAPI.Ultilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.Text;
@@ -22,6 +24,13 @@ builder.Services.AddScoped<IEmailServices, EmailServices>();
 builder.Services.AddScoped<IJWTUlti,JWTUlti>();
 builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();
 builder.Services.AddScoped<IUserServices, UserServices>();
+builder.Services.AddScoped<ICartServices, CartServices>();
+builder.Services.AddScoped<IOrderServices, OrderServices>();
+builder.Services.AddScoped<IVnPayServices, VnPayService>();
+builder.Services.Configure<VnPayConfig>(builder.Configuration.GetSection("VnPay"));
+builder.Services.AddSingleton(sp =>
+    sp.GetRequiredService<IOptions<VnPayConfig>>().Value);
+builder.Services.AddScoped<ICheckoutServices, CheckoutServices>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -66,6 +75,32 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero
     };
 });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", corsBuilder =>
+    {
+        if (builder.Environment.IsDevelopment())
+        {
+            corsBuilder
+                .SetIsOriginAllowed(origin => origin.Contains("localhost"))
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
+        }
+        else
+        {
+            corsBuilder
+                .WithOrigins(
+                    "https://fashionhub.name.vn",
+                    "https://admin.your-production-domain.com",
+                    "http://localhost:4200"
+                )
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
+        }
+    });
+});
 builder.Services.AddAuthorization();
 var app = builder.Build();
 
@@ -78,6 +113,7 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty;
     });
 }
+app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

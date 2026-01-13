@@ -8,5 +8,6 @@
         public int Status { get; set; }
         public double Price { get; set; }
         public int Quantity { get; set; }
+        public string? Img { get; set; }
     }
 }

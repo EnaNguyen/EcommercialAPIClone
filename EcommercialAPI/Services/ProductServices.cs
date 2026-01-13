@@ -5,6 +5,7 @@ using EcommercialAPI.Models.CreateModels;
 using EcommercialAPI.Models.EditModels;
 using EcommercialAPI.Models.ViewModels.User.Products;
 using EcommercialAPI.Respository;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommercialAPI.Services
 {
@@ -21,39 +22,26 @@ namespace EcommercialAPI.Services
         {
             try
             {
-                var ListProduct = _context.Products.ToList();
-                var Product = new List<UserProductList>();
-                {
-                    foreach (var item in ListProduct)
+                var products = await _context.Products
+                    .Select(p => new UserProductList
                     {
-                        Product.Add(new UserProductList()
-                        {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Description = p.Description,
+                        Price = p.Price,
+                        ReleaseDate = p.ReleaseDate,
+                        Quantity = p.Quantity,
+                        Status = p.Status,
+                        Brand = p.Brand,
+                        Img = p.Img
+                    })
+                    .ToListAsync();
 
-                            Id = item.Id,
-                            Name = item.Name,
-                            Description = item.Description,
-                            Price = item.Price,
-                            ReleaseDate = item.ReleaseDate,
-                            Quantity = item.Quantity,
-                            Status = item.Status,
-                            Brand = item.Brand,
-                        });
-                    }
-                }
-                if (Product.Count() > 0)
-                {
-                                        
-                    return new APIResponse
-                    {
-                        ResponseCode = 200,
-                        Result = "Received Data",
-                        Data = Product,
-                    };
-                }
                 return new APIResponse
                 {
                     ResponseCode = 200,
-                    Result = "Received Data with no Product",
+                    Result = products.Any() ? "Received Data" : "No products found",
+                    Data = products
                 };
             }
             catch (Exception ex)
@@ -65,42 +53,45 @@ namespace EcommercialAPI.Services
                     ErrorMessage = ex.Message
                 };
             }
-
         }
         public async Task<APIResponse> AdminAddNewProduct(ProductCreateModel productCreateModel)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
+            await using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                var ListProduct =  _context.Products.ToList();
-                var existingProduct = ListProduct.FirstOrDefault(g => g.Name.ToLower().Trim() == productCreateModel.Name.ToLower().Trim());  
-                if (existingProduct!=null) {
+                bool exists = await _context.Products
+                    .AnyAsync(p => p.Name.Trim().ToLower() == productCreateModel.Name.Trim().ToLower());
+
+                if (exists)
+                {
                     return new APIResponse
                     {
                         ResponseCode = 409,
-                        Result = "Product already exists",
+                        Result = "Product with this name already exists"
                     };
                 }
-                var ListIdProduct = ListProduct.Select(p=>p.Id).ToList();
-                Products ProductToCreate = new Products()
+
+                var newProduct = new Products
                 {
-                    Id = await _encryption.GenerateNewID("Products", ListIdProduct),
                     Name = productCreateModel.Name,
-                    ReleaseDate = DateOnly.FromDateTime(DateTime.Now),
                     Description = productCreateModel.Description,
-                    Quantity = productCreateModel.Quantity,
                     Brand = productCreateModel.Brand,
                     Price = productCreateModel.Price,
+                    Quantity = productCreateModel.Quantity,
                     Status = productCreateModel.Status,
+                    ReleaseDate = DateOnly.FromDateTime(DateTime.UtcNow),
+                    Img = productCreateModel.Img
                 };
-                _context.Products.Add(ProductToCreate);
-                _context.SaveChanges();
-                transaction.Commit();
+                _context.Products.Add(newProduct);
+                await _context.SaveChangesAsync();  
+
+                await transaction.CommitAsync();
+
                 return new APIResponse
                 {
                     ResponseCode = 201,
-                    Result = "Adding new Product: " + productCreateModel.Name,
-                    Data = productCreateModel
+                    Result = $"Product '{newProduct.Name}' added successfully",
+                    Data = newProduct  
                 };
             }
             catch (Exception ex)
@@ -109,13 +100,13 @@ namespace EcommercialAPI.Services
                 return new APIResponse
                 {
                     ResponseCode = 500,
-                    Result = "Can't Create New Product",
+                    Result = "Failed to create product",
                     ErrorMessage = ex.Message
                 };
             }
         }
 
-        public async Task<APIResponse> AdminUpdateProduct(string id, ProductEditModel productEditModel)
+        public async Task<APIResponse> AdminUpdateProduct(int id, ProductEditModel productEditModel)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -129,6 +120,7 @@ namespace EcommercialAPI.Services
                     productExisting.Status = productEditModel.Status;
                     productExisting.Brand = productEditModel.Brand;
                     productExisting.Quantity = productEditModel.Quantity;
+                    productEditModel.Img = productEditModel.Img;
                     _context.Products.Update(productExisting);
                     _context.SaveChanges();
                     transaction.Commit();
@@ -158,7 +150,7 @@ namespace EcommercialAPI.Services
             }
         }
 
-        public async Task<APIResponse> UpdateStatusProduct(string id)
+        public async Task<APIResponse> UpdateStatusProduct(int id)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -196,7 +188,7 @@ namespace EcommercialAPI.Services
             }
         }
 
-        public async Task<APIResponse> DeleteProduct(string id)
+        public async Task<APIResponse> DeleteProduct(int id)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try

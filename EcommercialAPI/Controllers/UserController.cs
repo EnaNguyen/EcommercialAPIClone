@@ -46,6 +46,6 @@ namespace EcommercialAPI.Controllers
             var data = await _services.ResetPasswordUserOTP(username, otp);
             return Ok(data);
         }
-
+        
     }
 }

@@ -9,9 +9,9 @@ namespace EcommercialAPI.Respository
     {
         Task<APIResponse> UserViewProduct();
         Task<APIResponse> AdminAddNewProduct(ProductCreateModel productCreateModel);
-        Task<APIResponse> AdminUpdateProduct(string id, ProductEditModel productEditModel);
-        Task<APIResponse> UpdateStatusProduct(string id);
-        Task<APIResponse> DeleteProduct(string id);
+        Task<APIResponse> AdminUpdateProduct(int id, ProductEditModel productEditModel);
+        Task<APIResponse> UpdateStatusProduct(int id);
+        Task<APIResponse> DeleteProduct(int id);
 
     }
 }

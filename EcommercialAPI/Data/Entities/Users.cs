@@ -17,6 +17,7 @@
         public bool TwoFA { get; set; } = false;
         public string? CurrentOtpCode { get; set; }              
         public DateTime? OtpExpiryTime { get; set; }
-
+        public Carts? Cart { get; set; }
+        public ICollection<Orders>? Orders { get; set; } = new List<Orders>();
     }
 }
