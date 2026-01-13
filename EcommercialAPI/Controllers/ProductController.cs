@@ -14,9 +14,9 @@ namespace EcommercialAPI.Controllers
             _services = services;
         }
         [HttpGet("ProductList")]
-        public async Task<IActionResult> ListSanPhamUser()
+        public async Task<IActionResult> ListSanPhamUser(string? name)
         {
-            var data = await _services.UserViewProduct();
+            var data = await _services.UserViewProduct(name);
             return Ok(data);
         }
         [HttpPost("AddNewProduct")]

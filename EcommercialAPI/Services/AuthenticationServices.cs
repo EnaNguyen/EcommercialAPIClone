@@ -113,14 +113,8 @@ namespace EcommercialAPI.Services
             }
             user.CurrentOtpCode = null;
             user.OtpExpiryTime = null;
-            await _context.SaveChangesAsync();
-
-            await _jWTUlti.GenerateRefreshTokenAsync(user.Id);
-            return new APIResponse
-            {
-                ResponseCode = 200,
-                Result = "Login Successfully"
-            };
+            await _context.SaveChangesAsync();  
+            return await CompleteLoginAndGenerateTokens(user);
         }
         public string HashCode(string code)
         {

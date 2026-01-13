@@ -19,9 +19,9 @@ namespace EcommercialAPI.Controllers
             return Ok(data);
         }
         [HttpPost("AddItemToCart")]
-        public async Task<IActionResult> AddItemToCard(string userId, int productId, int quantity)
+        public async Task<IActionResult> AddItemToCard(string username, int productId, int quantity)
         {
-            var data = await _services.AddItemToCart(userId, productId, quantity);
+            var data = await _services.AddItemToCart(username, productId, quantity);
             return Ok(data);
         }
         [HttpDelete("RemoveCartItems")]

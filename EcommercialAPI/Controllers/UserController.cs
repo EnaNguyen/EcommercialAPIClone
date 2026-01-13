@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EcommercialAPI.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : Controller
@@ -17,9 +16,9 @@ namespace EcommercialAPI.Controllers
             _services = services;
         }
         [HttpGet("ListUser")]
-        public async Task<IActionResult> GetListUser(string? id)
+        public async Task<IActionResult> GetListUser(string? username)
         {
-            var data = await _services.GetListUser(id);
+            var data = await _services.GetListUser(username);
             return Ok(data);
         }
         [HttpPost("CreateUser")]

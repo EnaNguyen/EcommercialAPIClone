@@ -6,6 +6,7 @@ using EcommercialAPI.Models.EditModels;
 using EcommercialAPI.Models.ViewModels.User.Products;
 using EcommercialAPI.Respository;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace EcommercialAPI.Services
 {
@@ -18,11 +19,16 @@ namespace EcommercialAPI.Services
             _context = context;
             _encryption = encryption;
         }
-        public async Task<APIResponse> UserViewProduct()
+        public async Task<List<UserProductList>> UserViewProduct(string? name)
         {
             try
             {
-                var products = await _context.Products
+                IQueryable<Products> query = _context.Products;
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    query = query.Where(c => c.Name.Contains(name));
+                }
+                var result = await query
                     .Select(p => new UserProductList
                     {
                         Id = p.Id,
@@ -37,21 +43,11 @@ namespace EcommercialAPI.Services
                     })
                     .ToListAsync();
 
-                return new APIResponse
-                {
-                    ResponseCode = 200,
-                    Result = products.Any() ? "Received Data" : "No products found",
-                    Data = products
-                };
+                return result;
             }
             catch (Exception ex)
             {
-                return new APIResponse
-                {
-                    ResponseCode = 500,
-                    Result = "Can't connect to DB",
-                    ErrorMessage = ex.Message
-                };
+                throw new Exception(ex.Message);
             }
         }
         public async Task<APIResponse> AdminAddNewProduct(ProductCreateModel productCreateModel)
@@ -120,7 +116,7 @@ namespace EcommercialAPI.Services
                     productExisting.Status = productEditModel.Status;
                     productExisting.Brand = productEditModel.Brand;
                     productExisting.Quantity = productEditModel.Quantity;
-                    productEditModel.Img = productEditModel.Img;
+                    productExisting.Img = productEditModel.Img;
                     _context.Products.Update(productExisting);
                     _context.SaveChanges();
                     transaction.Commit();

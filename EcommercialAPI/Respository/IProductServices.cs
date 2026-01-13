@@ -7,7 +7,7 @@ namespace EcommercialAPI.Respository
 {
     public interface IProductServices
     {
-        Task<APIResponse> UserViewProduct();
+        Task<List<UserProductList>> UserViewProduct(string? name);
         Task<APIResponse> AdminAddNewProduct(ProductCreateModel productCreateModel);
         Task<APIResponse> AdminUpdateProduct(int id, ProductEditModel productEditModel);
         Task<APIResponse> UpdateStatusProduct(int id);

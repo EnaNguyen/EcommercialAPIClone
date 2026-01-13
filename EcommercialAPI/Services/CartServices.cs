@@ -19,17 +19,18 @@ namespace EcommercialAPI.Services
             _context = context;
         }
 
-        public async Task<APIResponse> AddItemToCart(string userId, int productId, int quantity)
+        public async Task<APIResponse> AddItemToCart(string username, int productId, int quantity)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
             {
-                var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == userId);                   
+                var user = _context.Users.FirstOrDefault(g => g.Username == username || g.Email == username);
+                var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == user.Id);                   
                 if (cart == null)
                 {
                     cart = new Carts
                     {
-                        UserId = userId,
+                        UserId = user.Id,
                         CreatedAt = DateTime.UtcNow,
                         TotalPrice = 0
                     };
