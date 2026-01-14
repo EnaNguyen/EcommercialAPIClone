@@ -83,53 +83,66 @@ namespace EcommercialAPI.Services
         }
 
 
-        public async Task<List<GetCartList>> GetCartList(string? userId)
+        public async Task<List<GetCartList>> GetCartList(string? username)
         {
             try
             {
                 IQueryable<Carts> query = _context.Carts;
-                if (!string.IsNullOrWhiteSpace(userId))
+                if (!string.IsNullOrEmpty(username))
                 {
-                    query = query.Where(c => c.UserId == userId);                  
+                    var user = _context.Users.FirstOrDefault(g => g.Username == username || g.Email == username);
+                    if (user != null)
+                    {
+                        query = query.Where(c => c.UserId == user.Id);
+                        var result = await query.Select(g => new GetCartList
+                        {
+                            Id = g.Id,
+                            UserId = g.UserId,
+                            TotalPrice = g.TotalPrice,
+                            CreatedAt = g.CreatedAt,
+                        }).ToListAsync();
+                        foreach (var item in result)
+                        {
+                            List<GetCartDetailList> listDetail = new List<GetCartDetailList>();
+                            var ListDetail = _context.CartDetails.Where(g => g.CartId == item.Id).ToList();
+                            foreach (var dt in ListDetail)
+                            {
+                                var NameProduct = _context.Products.FirstOrDefault(g => g.Id == dt.ProductId);
+                                listDetail.Add(new GetCartDetailList
+                                {
+                                    Id = dt.ProductId,
+                                    ProductId = dt.ProductId,
+                                    ProductName = NameProduct.Name,
+                                    Price = dt.Price,
+                                    Quantity = dt.Quantity,
+                                });
+                            }
+                            item.Details = listDetail;
+                        }
+                        return result;
+                    }
+                    return null;
                 }
-                var result = await query.Select(g => new GetCartList
+                return query.Select(g => new GetCartList
                 {
                     Id = g.Id,
                     UserId = g.UserId,
                     TotalPrice = g.TotalPrice,
                     CreatedAt = g.CreatedAt,
-                }).ToListAsync();
-                foreach (var item in result)
-                {
-                    List<GetCartDetailList> listDetail = new List<GetCartDetailList>();
-                    var ListDetail = _context.CartDetails.Where(g => g.CartId == item.Id).ToList();
-                    foreach (var dt in ListDetail)
-                    {
-                        var NameProduct = _context.Products.FirstOrDefault(g => g.Id == dt.ProductId);
-                        listDetail.Add(new GetCartDetailList
-                        {
-                            Id = dt.ProductId,
-                            ProductId = dt.ProductId,
-                            ProductName = NameProduct.Name,
-                            Price = dt.Price,
-                            Quantity = dt.Quantity,
-                        });
-                    }
-                    item.Details = listDetail;
-                }
-                return result;
-            }
+                }).ToList();
+            }        
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-        public async Task<APIResponse> RemoveItemFromCart(string userId, int productId)
+        public async Task<APIResponse> RemoveItemFromCart(string username, int productId)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
             {
-                var userCart = _context.Carts.FirstOrDefault(c => c.UserId == userId);
+                var user = _context.Users.FirstOrDefault(g => g.Username == username || g.Email == username);
+                var userCart = _context.Carts.FirstOrDefault(c => c.UserId == user.Id);
                 var CartDetail = _context.CartDetails.FirstOrDefault(c => c.ProductId == productId && c.CartId == userCart.Id);
                 userCart.TotalPrice -= CartDetail.Quantity*CartDetail.Price;
                 _context.CartDetails.Remove(CartDetail);
@@ -153,13 +166,14 @@ namespace EcommercialAPI.Services
                 };
             }
         }
-        public async Task<APIResponse> IncreaseQuantity(string userId, int productId)
+        public async Task<APIResponse> IncreaseQuantity(string username, int productId)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
             {
+                var user = _context.Users.FirstOrDefault(g => g.Username == username || g.Email == username);
                 var product = _context.Products.FirstOrDefault(g => g.Id == productId);
-                var cart = _context.Carts.FirstOrDefault(g=>g.UserId== userId);
+                var cart = _context.Carts.FirstOrDefault(g=>g.UserId== user.Id);
                 var cartDetail = _context.CartDetails.FirstOrDefault(g=>g.ProductId== productId && g.CartId==cart.Id);
                 if(cartDetail == null || cartDetail.Quantity >= product.Quantity) 
                 {
@@ -196,13 +210,14 @@ namespace EcommercialAPI.Services
             }
         }
 
-        public async Task<APIResponse> DecreaseQuantity(string userId, int productId)
+        public async Task<APIResponse> DecreaseQuantity(string username, int productId)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
             {
+                var user = _context.Users.FirstOrDefault(g => g.Username == username || g.Email == username);
                 var product = _context.Products.FirstOrDefault(g => g.Id == productId);
-                var cart = _context.Carts.FirstOrDefault(g => g.UserId == userId);
+                var cart = _context.Carts.FirstOrDefault(g => g.UserId == user.Id);
                 var cartDetail = _context.CartDetails.FirstOrDefault(g => g.ProductId == productId && g.CartId == cart.Id);
                 if (cartDetail == null || cartDetail.Quantity ==1)
                 {
@@ -239,13 +254,14 @@ namespace EcommercialAPI.Services
             }
         }
 
-        public async Task<APIResponse> ChangeAmountDirect(string userId, int productId, int quantity)
+        public async Task<APIResponse> ChangeAmountDirect(string username, int productId, int quantity)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
             {
+                var user = _context.Users.FirstOrDefault(g => g.Username == username || g.Email == username);
                 var product = _context.Products.FirstOrDefault(g => g.Id == productId);
-                var cart = _context.Carts.FirstOrDefault(g => g.UserId == userId);
+                var cart = _context.Carts.FirstOrDefault(g => g.UserId == user.Id);
                 var cartDetail = _context.CartDetails.FirstOrDefault(g => g.ProductId == productId && g.CartId == cart.Id);
                 if (quantity >= product.Quantity || quantity <= 0)
                 {

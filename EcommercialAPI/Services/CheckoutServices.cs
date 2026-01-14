@@ -94,6 +94,7 @@ namespace EcommercialAPI.Services
                     transaction.Commit();
                     return new PaymentResponse
                     {
+
                         Success = true,
                         TotalPrice = Convert.ToDecimal(newOrder.TotalPrice),
                         Message = paymentUrl

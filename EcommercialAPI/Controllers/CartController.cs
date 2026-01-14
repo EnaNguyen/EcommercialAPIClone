@@ -13,9 +13,9 @@ namespace EcommercialAPI.Controllers
             _services = services;
         }
         [HttpGet("GetCartList")]
-        public async Task<IActionResult> GetCartList(string? id)
+        public async Task<IActionResult> GetCartList(string? username)
         {
-            var data = await _services.GetCartList(id);
+            var data = await _services.GetCartList(username);
             return Ok(data);
         }
         [HttpPost("AddItemToCart")]
@@ -25,27 +25,27 @@ namespace EcommercialAPI.Controllers
             return Ok(data);
         }
         [HttpDelete("RemoveCartItems")]
-        public async Task<IActionResult> RemoveCartItems(string userId, int productId)
+        public async Task<IActionResult> RemoveCartItems(string username, int productId)
         {
-            var data = await _services.RemoveItemFromCart(userId, productId);
+            var data = await _services.RemoveItemFromCart(username, productId);
             return Ok(data);
         }
         [HttpPut("IncreaseAmount")]
-        public async Task<IActionResult> IncreaseQuantity(string userId, int productId)
+        public async Task<IActionResult> IncreaseQuantity(string username, int productId)
         {
-            var data=await _services.IncreaseQuantity(userId, productId);
+            var data=await _services.IncreaseQuantity(username, productId);
             return Ok(data);
         }
         [HttpPut("DecreaseAmount")]
-        public async Task<IActionResult> DecreaseQuantity(string userId, int productId)
+        public async Task<IActionResult> DecreaseQuantity(string username, int productId)
         {
-            var data = await _services.DecreaseQuantity(userId, productId);
+            var data = await _services.DecreaseQuantity(username, productId);
             return Ok(data);
         }
         [HttpPut("ChangeQuantityDirect")]
-        public async Task<IActionResult> ChangeQuantity(string userId, int productId, int quantity)
+        public async Task<IActionResult> ChangeQuantity(string username, int productId, int quantity)
         {
-            var data = await _services.ChangeAmountDirect(userId, productId, quantity);
+            var data = await _services.ChangeAmountDirect(username, productId, quantity);
             return Ok(data);
         }
     }
