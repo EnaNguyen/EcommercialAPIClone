@@ -80,7 +80,7 @@ namespace EcommercialAPI.Services
                 }    
                 _context.OrderDetails.AddRangeAsync(ordersDetail);
                 await _context.SaveChangesAsync();
-                if (request.PaymentMethod =="VnPay")
+                if (request.PaymentMethod.ToLower() =="vnpay")
                 {
                     var vnPayRequest = new VnPaymentRequest
                     {
@@ -128,7 +128,6 @@ namespace EcommercialAPI.Services
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-
                 Console.WriteLine("[DEBUG] Starting VNPay callback processing...");
                 var vnPayResponse = _vnPayService.PaymentExecute(query);
                 Console.WriteLine($"[DEBUG] VNPay response: Success={vnPayResponse.Success}, Code={vnPayResponse.VnPayResponseCode}");
@@ -156,7 +155,6 @@ namespace EcommercialAPI.Services
                                 Quantity = item.Quantity
                             });
                     } 
-                    await _context.OrderDetails.AddRangeAsync(listDetail);
                     _context.Orders.RemoveRange(orderTemp);
                     await _context.SaveChangesAsync();
                     string message = vnPayResponse.VnPayResponseCode switch
@@ -181,8 +179,6 @@ namespace EcommercialAPI.Services
                     };
                 }
                 orderTemp.Status = 1;
-
-                _context.Orders.RemoveRange(orderTemp);
                 await _context.SaveChangesAsync();
                 var redirectUrl = $"http://localhost:4200/PaymentSuccess?status=success&orderId={orderTemp.Id}&transactionId={vnPayResponse.TransactionId}";
                 Console.WriteLine($"[DEBUG] Redirecting to: {redirectUrl}");

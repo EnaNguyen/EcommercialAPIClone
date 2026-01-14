@@ -22,9 +22,9 @@ namespace EcommercialAPI.Controllers
             return Ok(data);
         }
         [HttpPost("CreateUser")]
-        public async Task<IActionResult> CreateNewUser(UserCreateModal model, string role)
+        public async Task<IActionResult> CreateNewUser(UserCreateModal model)
         {
-            var data=  await _services.CreateUser(model,role);
+            var data=  await _services.CreateUser(model);
             return Ok(data);
         }
         [HttpPost("UpdateUserInfo")]

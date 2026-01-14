@@ -7,7 +7,7 @@ namespace EcommercialAPI.Respository
     public interface IUserServices
     {
         Task<List<GetUserList>> GetListUser(string? usernameOrEmail);
-        Task<APIResponse> CreateUser(UserCreateModal model, string role);
+        Task<APIResponse> CreateUser(UserCreateModal model);
         Task<APIResponse> UpdateInfoUser(UserInfoChangeModel model, string username);
         Task<APIResponse> UpdatePasswordUser(UserChangePasswordModel model,string username);
         Task<APIResponse> ResetPasswordUser(string username);

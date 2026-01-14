@@ -1,4 +1,5 @@
 ﻿using EcommercialAPI.Respository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcommercialAPI.Controllers
@@ -24,18 +25,21 @@ namespace EcommercialAPI.Controllers
             var data = await _services.CancelOrder(id);
             return Ok(data);
         }
+        [Authorize(Roles = "Admin")]
         [HttpPut("AcceptOrder")]
         public async Task<IActionResult> AcceptOrder(int id)
         {
             var data = await _services.AcceptOrder(id);
             return Ok(data);
         }
+        [Authorize(Roles = "Admin")]
         [HttpPut("PaidOrderCOD")]
         public async Task<IActionResult> PaidOrderCOD(int id)
         {
             var data = await _services.PaidOrderCOD(id);
             return Ok(data);
         }
+        [Authorize(Roles = "Admin")]
         [HttpPut("ReceivedOrderVisa")]
         public async Task<IActionResult> ReceivedOrderVisa(int id)
         {

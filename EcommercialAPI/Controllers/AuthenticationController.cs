@@ -24,5 +24,12 @@ namespace EcommercialAPI.Controllers
             var response = await _services.TwoFALogin(username, otp);
             return Ok(response);
         }
+        [HttpGet("ResentOtp")]
+        public async Task<IActionResult> ResentOtp(string username)
+        {
+            var response = await _services.ResentOtp(username);
+            return Ok(response);
+
+        }
     }
 }

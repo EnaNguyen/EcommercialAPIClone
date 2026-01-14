@@ -28,8 +28,7 @@ namespace EcommercialAPI.Ultilities
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(ClaimTypes.NameIdentifier, userId),
             new Claim(ClaimTypes.Role, role)
-        };
-
+            };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expiresMinutes = int.Parse(_configuration["Jwt:AccessTokenExpires"] ?? "60");
@@ -40,7 +39,6 @@ namespace EcommercialAPI.Ultilities
                 expires: DateTime.UtcNow.AddMinutes(expiresMinutes),
                 signingCredentials: creds
             );
-
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
         public async Task<string> GenerateRefreshTokenAsync(string userId)
@@ -53,8 +51,6 @@ namespace EcommercialAPI.Ultilities
                 UserId = userId,
                 CreatedAt = DateTime.UtcNow,
                 ExpiresAt = DateTime.UtcNow.AddDays(int.Parse(_configuration["Jwt:RefreshTokenExpiresDays"] ?? "7")),
-                //IpAddress = httpContext.Connection.RemoteIpAddress?.ToString(),
-                //UserAgent = httpContext.Request.Headers["User-Agent"].ToString()
             };
             _context.RefreshTokens.Add(refreshToken);
             await _context.SaveChangesAsync();

@@ -55,7 +55,7 @@ namespace EcommercialAPI.Services
             }
         }
 
-        public async Task<APIResponse> CreateUser(UserCreateModal model, string role)
+        public async Task<APIResponse> CreateUser(UserCreateModal model)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
@@ -76,10 +76,10 @@ namespace EcommercialAPI.Services
                 {
                     errors["Email"] = "Email không hợp lệ";
                 }
-                if (model.Phone.Length>=12 || model.Phone.Length<=9 || !long.TryParse(model.Phone, out _))
-                {
-                    errors["Phone"] = "Số điện thoại không hợp lệ";
-                }
+                //if (model.Phone==null||model.Phone.Length>=12 || model.Phone.Length<=9 || !long.TryParse(model.Phone, out _))
+                //{
+                //    errors["Phone"] = "Số điện thoại không hợp lệ";
+                //}
                 if (errors.Count > 0)
                 {
                     var errorLists = errors.Select(kvp => new ErrorList
@@ -97,13 +97,13 @@ namespace EcommercialAPI.Services
                     };
                 }
                 string First2Digit = "";
-                if (role == "Admin")
+                if (model.Role.Trim() == "admin")
                     First2Digit = "AD";
-                else if (role == "User")
+                else if (model.Role.Trim() == "customer")
                     First2Digit = "US";
                 else
                     First2Digit = "MN";
-                var MaxUserId = _context.Users.Where(g => g.Role == role).OrderByDescending(p => p.Id).FirstOrDefault();
+                var MaxUserId = _context.Users.Where(g => g.Role.Trim() == (model.Role.Trim())).OrderByDescending(p => p.Id).FirstOrDefault();
                 string newId;
                 if (MaxUserId == null || string.IsNullOrEmpty(MaxUserId.Id))
                 {
@@ -128,12 +128,12 @@ namespace EcommercialAPI.Services
                     Username = model.Username,
                     FullName = model.Fullname,
                     Email = model.Email,
-                    Phone = model.Phone,
-                    DayOfBirth = model.DayOfBirth,
+                    Phone = model.Phone??"",
+                    DayOfBirth = model.DayOfBirth??DateOnly.FromDateTime(DateTime.Now),
                     Password = _authenticationServices.HashCode(model.Password),
                     CreatedAd = DateOnly.FromDateTime(DateTime.Now),
                     Role = "Customer",
-                    Gender = model.Gender,
+                    Gender = model.Gender??0,
                     Status = 1,
                     TwoFA = false
                 };

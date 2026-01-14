@@ -6,6 +6,7 @@ namespace EcommercialAPI.Respository
     {
         Task<APIResponse> Login(string username, string password);
         Task<APIResponse> TwoFALogin(string username, string otp);
+        Task<APIResponse> ResentOtp(string username);   
         string HashCode(string code);
         string GenerateOtp();
     }

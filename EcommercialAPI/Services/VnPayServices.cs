@@ -20,8 +20,7 @@ namespace EcommercialAPI.Services
             var vnpay = new VnPayLibrary();
             vnpay.AddRequestData("vnp_Version", _config["VnPay:Version"]);
             vnpay.AddRequestData("vnp_Command", _config["VnPay:Command"]);
-            vnpay.AddRequestData("vnp_TmnCode", "FPH4F8YP");
-            vnpay.AddRequestData("vnp_HashSecret", "Y6W4TWAVFD8ZHVQHS3M6IF2J8VUV7NSQ");
+            vnpay.AddRequestData("vnp_TmnCode", _config["VnPay:TmnCode"]);
             vnpay.AddRequestData("vnp_Amount", (model.Amount * 100).ToString()); 
 
             vnpay.AddRequestData("vnp_CreateDate", model.CreatedDate.ToString("yyyyMMddHHmmss"));
@@ -30,7 +29,7 @@ namespace EcommercialAPI.Services
             vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locale"]);
 
             vnpay.AddRequestData("vnp_OrderInfo", "Thanh Toan Cho Don Hang:" + model.OrderId);
-            vnpay.AddRequestData("vnp_OrderType", "other"); //default value: other
+            vnpay.AddRequestData("vnp_OrderType", "other"); 
             vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:PaymentBackReturnUrl"]);
             vnpay.AddRequestData("vnp_ExpireDate", model.CreatedDate.AddMinutes(30).ToString("yyyyMMddHHmmss"));
            

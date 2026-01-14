@@ -52,7 +52,6 @@ namespace EcommercialAPI.Services
                             {
                                 return new APIResponse { ResponseCode = 500, Result = "Failed to send OTP" };
                             }
-
                             return new APIResponse
                             {
                                 ResponseCode = 200,
@@ -156,6 +155,51 @@ namespace EcommercialAPI.Services
                     Role = user.Role
                 }
             };
+        }
+
+        public async Task<APIResponse> ResentOtp(string username)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var account = _context.Users.FirstOrDefault(u => u.Username == username||u.Email==username);
+                if (account != null)
+                {
+                    string otp = GenerateOtp();
+                    account.CurrentOtpCode = HashCode(otp);
+                    account.OtpExpiryTime = DateTime.UtcNow.AddMinutes(5);
+                    await _context.SaveChangesAsync();
+                    var emailResult = await _emailServices.SendEmail(account.Email, otp, "Xác thực 2 yếu tố qua Email", "OTP");
+                    if (emailResult.ResponseCode != 200)
+                    {
+                        transaction.Rollback();
+                        return new APIResponse { ResponseCode = 500, Result = "Failed to send OTP" };
+                    }
+                    transaction.Commit();
+                    return new APIResponse
+                    {
+                        ResponseCode = 200,
+                        Result = "OTP resent successfully"
+                    };
+                }    
+                return new APIResponse
+                {
+                    ResponseCode = 404,
+                    Result = "Not Found",
+                    ErrorMessage = "User not found"
+                };
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                _logger.LogError(ex, "Error resending OTP for user {Username}", username);
+                return new APIResponse
+                {
+                    ResponseCode = 500,
+                    Result = "Error",
+                    ErrorMessage = "An error occurred while resending OTP."
+                };
+            }
         }
     }
 }
