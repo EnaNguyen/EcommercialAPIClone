@@ -227,7 +227,7 @@ namespace EcommercialAPI.Services
                     currentAccount.CurrentOtpCode = _authenticationServices.HashCode(otpCode);
                     currentAccount.OtpExpiryTime = DateTime.UtcNow.AddMinutes(5);
                     await _context.SaveChangesAsync();
-                    var sendEmail = await _emailServices.SendEmail(currentAccount.Email, otpCode, "Thiết lập lại mật mật khẩu (Reset Password )", "OTP");
+                    var sendEmail = await _emailServices.SendEmail(currentAccount.Email, otpCode, "Thiết lập lại mật mật khẩu (Reset Password )", "Password Reset");
                     if (sendEmail.ResponseCode != 200)
                     {
                         return new APIResponse { ResponseCode = 500, Result = "Failed to send OTP" };
